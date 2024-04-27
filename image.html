@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WELCOME TO CHILLY IMAGE CLASSIFICATION</title>
+    <style>
+        body {
+  		background-image: url('img_chilly.jpg');
+  		background-repeat: no-repeat;
+  		background-attachment: fixed;
+  		background-size: 100% 100%;
+}
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>CHILLI CROP DISEASE PREDICTION</h1>
+        <form id="upload-form" action="/predict" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*" required>
+            <button type="submit">Predict</button>
+        </form>
+        <div id="result"></div>
+        <img id="uploaded-img" src="#" alt="Uploaded Image"> <!-- Display uploaded image here -->
+    </div>
+
+    <script>
+        window.onload = function() {
+            document.getElementById('upload-form').onsubmit = function(event) {
+                event.preventDefault();
+                var formData = new FormData(this);
+                fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('result').innerText = "" + data;
+                    document.getElementById('uploaded-img').style.display = 'block'; // Show uploaded image
+                    document.getElementById('uploaded-img').setAttribute('src', URL.createObjectURL(formData.get('file'))); // Set uploaded image source
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            };
+        };
+    </script>
+</body>
+</html>
